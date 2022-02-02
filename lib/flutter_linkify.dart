@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:linkify/linkify.dart';
+import 'package:simple_url_preview/simple_url_preview.dart';
 
 export 'package:linkify/linkify.dart'
     show
@@ -265,7 +266,7 @@ class SelectableLinkify extends StatelessWidget {
     final elements = linkify(
       text,
       options: options,
-      linkifiers: linkifiers,
+      linkifiers: [UserTagLinkifier(), UrlLinkifier(), EmailLinkifier()],
     );
 
     return SelectableText.rich(
@@ -339,16 +340,34 @@ TextSpan buildTextSpan(
             return LinkableSpan(
               mouseCursor: SystemMouseCursors.click,
               inlineSpan: TextSpan(
-                text: element.text,
-                style: linkStyle,
-                recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
+                children: [
+                  TextSpan(
+                    text: element.text,
+                    style: linkStyle,
+                    recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
+                  ),
+                  element.url ? WidgetSpan(
+                    child: SimpleUrlPreview(
+                      url: element.text,
+                    ),
+                  ) : WidgetSpan(),
+                ],
               ),
             );
           } else {
             return TextSpan(
-              text: element.text,
-              style: linkStyle,
-              recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
+              children: [
+                TextSpan(
+                  text: element.text,
+                  style: linkStyle,
+                  recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
+                ),
+                element.url ? WidgetSpan(
+                  child: SimpleUrlPreview(
+                    url: element.text,
+                  ),
+                ) : WidgetSpan(),
+              ]
             );
           }
         } else {
