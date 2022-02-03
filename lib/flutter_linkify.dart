@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:linkify/linkify.dart';
 import 'package:simple_url_preview/simple_url_preview.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 export 'package:linkify/linkify.dart'
     show
@@ -110,6 +111,7 @@ class Linkify extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyText2?.merge(style),
         onOpen: onOpen,
         useMouseRegion: true,
+        parentContext: context,
         linkStyle: Theme.of(context)
             .textTheme
             .bodyText2
@@ -274,15 +276,15 @@ class SelectableLinkify extends StatelessWidget {
         elements,
         style: Theme.of(context).textTheme.bodyText2?.merge(style),
         onOpen: onOpen,
+        parentContext: context,
         linkStyle: Theme.of(context)
-            .textTheme
-            .bodyText2
-            ?.merge(style)
-            .copyWith(
-              color: Colors.blueAccent,
-              decoration: TextDecoration.underline,
-            )
-            .merge(linkStyle),
+          .textTheme
+          .bodyText2
+          ?.merge(style)
+          .copyWith(
+            color: Colors.blueAccent,
+            decoration: TextDecoration.underline,
+          ).merge(linkStyle),
       ),
       textAlign: textAlign,
       textDirection: textDirection,
@@ -315,13 +317,13 @@ class LinkableSpan extends WidgetSpan {
     required MouseCursor mouseCursor,
     required InlineSpan inlineSpan,
   }) : super(
-          child: MouseRegion(
-            cursor: mouseCursor,
-            child: Text.rich(
-              inlineSpan,
-            ),
-          ),
-        );
+    child: MouseRegion(
+      cursor: mouseCursor,
+      child: Text.rich(
+        inlineSpan,
+      ),
+    ),
+  );
 }
 
 /// Raw TextSpan builder for more control on the RichText
@@ -331,6 +333,7 @@ TextSpan buildTextSpan(
   TextStyle? linkStyle,
   LinkCallback? onOpen,
   bool useMouseRegion = false,
+  required BuildContext parentContext,
 }) {
   return TextSpan(
     children: elements.map<InlineSpan>(
@@ -341,32 +344,40 @@ TextSpan buildTextSpan(
               mouseCursor: SystemMouseCursors.click,
               inlineSpan: TextSpan(
                 children: [
-                  TextSpan(
+                  Uri.parse(element.text).host != '' ? WidgetSpan(
+                    child: SimpleUrlPreview(
+                      url: element.text,
+                      imageLoaderColor: Colors.blue,
+                      bgColor: Theme.of(parentContext).backgroundColor,
+                      descriptionStyle: TextStyle(color: Theme.of(parentContext).textTheme.bodyText1?.color),
+                      titleStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16),
+                      siteNameStyle: TextStyle(color: Colors.blue),
+                    ),
+                  ) : TextSpan(
                     text: element.text,
                     style: linkStyle,
                     recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
                   ),
-                  element.url ? WidgetSpan(
-                    child: SimpleUrlPreview(
-                      url: element.text,
-                    ),
-                  ) : WidgetSpan(),
                 ],
               ),
             );
           } else {
             return TextSpan(
               children: [
-                TextSpan(
+                Uri.parse(element.text).host != '' ? WidgetSpan(
+                  child: SimpleUrlPreview(
+                    url: element.text,
+                    imageLoaderColor: Colors.blue,
+                    bgColor: Theme.of(parentContext).backgroundColor,
+                    descriptionStyle: TextStyle(color: Theme.of(parentContext).textTheme.bodyText1?.color),
+                    titleStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16),
+                    siteNameStyle: TextStyle(color: Colors.blue),
+                  ),
+                ) : TextSpan(
                   text: element.text,
                   style: linkStyle,
                   recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
                 ),
-                element.url ? WidgetSpan(
-                  child: SimpleUrlPreview(
-                    url: element.text,
-                  ),
-                ) : WidgetSpan(),
               ]
             );
           }
