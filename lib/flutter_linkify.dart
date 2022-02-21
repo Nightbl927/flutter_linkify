@@ -348,7 +348,7 @@ TextSpan buildTextSpan(
                     child: SimpleUrlPreview(
                       url: element.text,
                       imageLoaderColor: Colors.blue,
-                      bgColor: Theme.of(parentContext).colorScheme.secondaryContainer,
+                      bgColor: Theme.of(parentContext).backgroundColor,
                       descriptionStyle: TextStyle(color: Theme.of(parentContext).textTheme.bodyText1?.color),
                       titleStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16),
                       siteNameStyle: TextStyle(color: Colors.blue),
@@ -368,7 +368,7 @@ TextSpan buildTextSpan(
                   child: SimpleUrlPreview(
                     url: element.text,
                     imageLoaderColor: Colors.blue,
-                    bgColor: Theme.of(parentContext).colorScheme.secondaryContainer,
+                    bgColor: Theme.of(parentContext).backgroundColor,
                     descriptionStyle: TextStyle(color: Theme.of(parentContext).textTheme.bodyText1?.color),
                     titleStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16),
                     siteNameStyle: TextStyle(color: Colors.blue),
