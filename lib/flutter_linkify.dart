@@ -15,7 +15,9 @@ export 'package:linkify/linkify.dart'
         UrlElement,
         UrlLinkifier,
         EmailElement,
-        EmailLinkifier;
+        EmailLinkifier,
+        PhoneNumberLinkifier,
+        PhoneNumberElement;
 
 /// Callback clicked link
 typedef LinkCallback = void Function(LinkableElement link);
@@ -102,7 +104,7 @@ class Linkify extends StatelessWidget {
     final elements = linkify(
       text,
       options: options,
-      linkifiers: linkifiers,
+      linkifiers: [UserTagLinkifier(), UrlLinkifier(), EmailLinkifier(), PhoneNumberLinkifier()],
     );
 
     return Text.rich(
