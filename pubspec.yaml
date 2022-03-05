@@ -10,7 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  linkify: ^4.0.0
+  linkify:
+      git:
+        url: git://github.com/Nightbl927/linkify.git
+        ref: master 
 
 dev_dependencies:
   pedantic: ^1.11.0
