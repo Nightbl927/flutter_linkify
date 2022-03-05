@@ -270,7 +270,7 @@ class SelectableLinkify extends StatelessWidget {
     final elements = linkify(
       text,
       options: options,
-      linkifiers: [UserTagLinkifier(), UrlLinkifier(), EmailLinkifier()],
+      linkifiers: [UserTagLinkifier(), UrlLinkifier(), EmailLinkifier(), PhoneNumberLinkifier()],
     );
 
     return SelectableText.rich(
