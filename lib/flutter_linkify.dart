@@ -7,17 +7,17 @@ import 'package:url_launcher/url_launcher.dart';
 
 export 'package:linkify/linkify.dart'
     show
-        LinkifyElement,
-        LinkifyOptions,
-        LinkableElement,
-        TextElement,
-        Linkifier,
-        UrlElement,
-        UrlLinkifier,
-        EmailElement,
-        EmailLinkifier,
-        PhoneNumberLinkifier,
-        PhoneNumberElement;
+    LinkifyElement,
+    LinkifyOptions,
+    LinkableElement,
+    TextElement,
+    Linkifier,
+    UrlElement,
+    UrlLinkifier,
+    EmailElement,
+    EmailLinkifier,
+    PhoneNumberLinkifier,
+    PhoneNumberElement;
 
 /// Callback clicked link
 typedef LinkCallback = void Function(LinkableElement link);
@@ -119,9 +119,9 @@ class Linkify extends StatelessWidget {
             .bodyText2
             ?.merge(style)
             .copyWith(
-              color: Colors.blueAccent,
-              decoration: TextDecoration.underline,
-            )
+          color: Colors.blueAccent,
+          decoration: TextDecoration.underline,
+        )
             .merge(linkStyle),
       ),
       textAlign: textAlign,
@@ -280,13 +280,13 @@ class SelectableLinkify extends StatelessWidget {
         onOpen: onOpen,
         parentContext: context,
         linkStyle: Theme.of(context)
-          .textTheme
-          .bodyText2
-          ?.merge(style)
-          .copyWith(
-            color: Colors.blueAccent,
-            decoration: TextDecoration.underline,
-          ).merge(linkStyle),
+            .textTheme
+            .bodyText2
+            ?.merge(style)
+            .copyWith(
+          color: Colors.blueAccent,
+          decoration: TextDecoration.underline,
+        ).merge(linkStyle),
       ),
       textAlign: textAlign,
       textDirection: textDirection,
@@ -330,23 +330,23 @@ class LinkableSpan extends WidgetSpan {
 
 /// Raw TextSpan builder for more control on the RichText
 TextSpan buildTextSpan(
-  List<LinkifyElement> elements, {
-  TextStyle? style,
-  TextStyle? linkStyle,
-  LinkCallback? onOpen,
-  bool useMouseRegion = false,
-  required BuildContext parentContext,
-}) {
+    List<LinkifyElement> elements, {
+      TextStyle? style,
+      TextStyle? linkStyle,
+      LinkCallback? onOpen,
+      bool useMouseRegion = false,
+      required BuildContext parentContext,
+    }) {
   return TextSpan(
     children: elements.map<InlineSpan>(
-      (element) {
+          (element) {
         if (element is LinkableElement) {
           if (useMouseRegion) {
             return LinkableSpan(
               mouseCursor: SystemMouseCursors.click,
               inlineSpan: TextSpan(
                 children: [
-                  Uri.parse(element.text).host != '' ? WidgetSpan(
+                  element.text.contains("tel:") == false && Uri.parse(element.text).host != '' ? WidgetSpan(
                     child: SimpleUrlPreview(
                       url: element.text,
                       imageLoaderColor: Colors.blue,
@@ -365,22 +365,22 @@ TextSpan buildTextSpan(
             );
           } else {
             return TextSpan(
-              children: [
-                Uri.parse(element.text).host != '' ? WidgetSpan(
-                  child: SimpleUrlPreview(
-                    url: element.text,
-                    imageLoaderColor: Colors.blue,
-                    bgColor: Theme.of(parentContext).backgroundColor,
-                    descriptionStyle: TextStyle(color: Theme.of(parentContext).textTheme.bodyText1?.color),
-                    titleStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16),
-                    siteNameStyle: TextStyle(color: Colors.blue),
+                children: [
+                  element.text.contains("tel:") == false && Uri.parse(element.text).host != '' ? WidgetSpan(
+                    child: SimpleUrlPreview(
+                      url: element.text,
+                      imageLoaderColor: Colors.blue,
+                      bgColor: Theme.of(parentContext).backgroundColor,
+                      descriptionStyle: TextStyle(color: Theme.of(parentContext).textTheme.bodyText1?.color),
+                      titleStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16),
+                      siteNameStyle: TextStyle(color: Colors.blue),
+                    ),
+                  ) : TextSpan(
+                    text: element.text,
+                    style: linkStyle,
+                    recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
                   ),
-                ) : TextSpan(
-                  text: element.text,
-                  style: linkStyle,
-                  recognizer: onOpen != null ? (TapGestureRecognizer()..onTap = () => onOpen(element)) : null,
-                ),
-              ]
+                ]
             );
           }
         } else {
