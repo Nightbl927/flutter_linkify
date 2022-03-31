@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   linkify:
       git:
-        url: git://github.com/Nightbl927/linkify.git
+        url: https://github.com/Nightbl927/linkify.git
         ref: master 
 
 dev_dependencies:
